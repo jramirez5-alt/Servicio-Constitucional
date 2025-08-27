@@ -5,10 +5,12 @@ const URLS_TO_CACHE = [
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
+  // Si tienes CSS o JS externo, agrégalo aquí, por ejemplo:
+  // "./index.css",
+  // "./index.js"
 ];
- 
+
 self.addEventListener("install", event => {
-  
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(URLS_TO_CACHE))
   );
@@ -34,6 +36,7 @@ self.addEventListener("fetch", event => {
         caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
         return response;
       }).catch(() => {
+        // Si falla la red y es navegación, mostrar index.html
         if (request.mode === "navigate") {
           return caches.match("./index.html");
         }
